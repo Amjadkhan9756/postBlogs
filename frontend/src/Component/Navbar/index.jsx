@@ -29,7 +29,7 @@ function NavbarComponent() {
               }}
               className={styles.buttonJoin}
             >
-              Be a part
+              Register && Login
             </div>
           )}
 
