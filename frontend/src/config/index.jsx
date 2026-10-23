@@ -1,10 +1,10 @@
 import axios from "axios";
-export const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "https://postblogs-eyvu.onrender.com";
+// export const BASE_URL =
+//   process.env.NEXT_PUBLIC_API_BASE_URL || "https://postblogs-eyvu.onrender.com";
 
   
-// export const BASE_URL =
-//   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/:https://proconnectp.onrender.com";
+export const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080/:https://proconnectp.onrender.com";
 
 const base = BASE_URL.endsWith("/") ? BASE_URL.slice(0, -1) : BASE_URL;
 
