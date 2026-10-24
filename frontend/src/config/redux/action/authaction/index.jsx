@@ -50,7 +50,11 @@ export const registerUser= createAsyncThunk("user/register",
             return thunkAPI.fulfillWithValue(response.data);
         }
         catch (err) {
-            return thunkAPI.rejectWithValue(err.response?.data?.message || "Registration failed");
+            const message = err.response?.data?.message
+                || (err.request
+                    ? "Could not reach the API. Check that the backend is running and the API URL is correct."
+                    : "Registration failed");
+            return thunkAPI.rejectWithValue(message);
         }
     }
 )

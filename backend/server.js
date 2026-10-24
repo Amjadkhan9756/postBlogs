@@ -19,18 +19,22 @@ app.use(userRoutes);
 
 app.use("/uploads", express.static("uploads"))
 
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => console.log("connected too mongodb atlas"))
-    .catch((err) => console.error("mongose connected failed", err))
-
 app.get("/", (req, res) => {
     res.send("API is working and connect to mongodb atles")
 });
 
-
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-    console.log(`🚀 Server is running on port ${PORT}`);
-});
+
+try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+        console.log(`🚀 Server is running on port ${PORT}`);
+    });
+} catch (err) {
+    console.error("MongoDB connection failed; the API was not started.", err);
+    process.exitCode = 1;
+}
+
+
 

@@ -21,7 +21,7 @@ ADMIN_WIPE_SECRET=secret
 ## 3. Run the server
 
 ```bash
-npm start
+npm run dev
 ```
 
 API runs at `http://localhost:8080`.
