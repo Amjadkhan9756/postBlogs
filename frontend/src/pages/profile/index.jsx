@@ -126,12 +126,12 @@ const Profile = () => {
 
               <div className={styles.userInfoConnect}>
                 <div className={styles.userInfo}>
-                  {/* <h2 className={styles.name}>{userProfile.userId?.name}</h2> */}
+                  {/* <h2 className={styles.name}>{userProfile.userId?.username}</h2> */}
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>
                     <input
                       type="text"
                       className={styles.editname}
-                      value={userProfile.userId?.name || ""}
+                      value={userProfile.userId?.username || ""}
                       onChange={(e) => {
                         setuserProfile({
                           ...userProfile,
@@ -208,7 +208,7 @@ const Profile = () => {
                   }}
                 >
                   {userProfile.about ||
-                    " I am a passionate Full Stack Developer with a strong foundation in Java and expertise in Data Structures and Algorithms (DSA). Skilled in building scalable, responsive, and efficient web applications, I enjoy solving complex problems and bringing creative solutions to life. I have hands-on experience with both front-end and back-end technologies, and I am committed to writing clean, maintainable code that drives real-world impact."
+                    "update here about your bio  "
                     }
                 </p>
               )}
