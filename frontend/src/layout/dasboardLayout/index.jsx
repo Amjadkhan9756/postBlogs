@@ -101,7 +101,7 @@ function DashboardLayout({ children }) {
               />
             </svg>
 
-            <p>Connections</p>
+            <p>My Connections</p>
           </div>
 
           <div onClick={handleLogout} className={styles.sidebarOption}>
