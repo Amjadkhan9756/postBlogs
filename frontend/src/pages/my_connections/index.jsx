@@ -6,7 +6,7 @@ import UserLayout from "@/layout/userlayout";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "./style.module.css";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import {acceptConnectionRequest} from  "@/config/redux/action/authaction";
 

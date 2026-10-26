@@ -11,7 +11,7 @@ const connectionsRequest = new mongoose.Schema({
     },
     status_accepted: {
         type: Boolean,
-        default: null,
+        default: null, 
     }
 })
 

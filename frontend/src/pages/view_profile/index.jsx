@@ -7,6 +7,7 @@ import UserLayout from "@/layout/userlayout";
 import DashboardLayout from "@/layout/dasboardLayout";
 import styles from "./[username].module.css";
 import { getImageUrl } from "@/config";
+import { useSearchParams } from "next/navigation";
 import Avatar from "@/Component/Avatar";
 import VerifiedBadge from "@/Component/VerifiedBadge";
 import { useState, useEffect } from "react";
@@ -142,18 +143,6 @@ export default function ViewProfile({ userProfile }) {
                         })
                         
                       );
-
-
-
-
-
-
-
-
-
-
-
-
                     }}
                     className=""
                   >

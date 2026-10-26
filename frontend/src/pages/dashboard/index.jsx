@@ -77,7 +77,7 @@ function dashboard() {
               <div className={styles.createPostContainer}>
                 <Avatar
                   src={authState.user?.userId?.profilePicture}
-                  name={authState.user?.userId?.name}
+                  name={authState.user?.userId?.username}
                   className={styles.userProfile}
                   initialClassName={styles.avatarInitials}
                 />
@@ -88,9 +88,9 @@ function dashboard() {
                   className={styles.textareaOfContent}
                   name=""
                   id=""
-                  placeholder="Write Something..."
+                  placeholder="Post Something..."
                 ></textarea>
-                
+
                 <label htmlFor="fileUpload">
                   <div className={styles.Fab}>
                     <svg
@@ -134,7 +134,7 @@ function dashboard() {
                           {hasUser && (
                             <Avatar
                               src={profilePicture}
-                              name={hasUser?.name}
+                              name={hasUser?.username}
                               className={styles.avatarCircle}
                               initialClassName={styles.avatarInitials}
                               onClick={() => {
