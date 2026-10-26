@@ -118,7 +118,7 @@ const Profile = () => {
                 />
                 <Avatar
                   src={userProfile.userId?.profilePicture}
-                  name={userProfile.userId?.name}
+                  name={userProfile.userId?.username}
                   className={styles.profilePic}
                   initialClassName={styles.profilePicInitials}
                 />
