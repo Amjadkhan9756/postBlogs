@@ -1,4 +1,4 @@
-    import {clientServer} from "@/config";
+    import {clientServer, getApiErrorMessage} from "@/config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 // all post fetched 
@@ -14,7 +14,7 @@ export const allPosts= createAsyncThunk("post/posts",
            }
                 }
                 catch(err){
-                    return thunkAPI.rejectWithValue(err.response.data.message || "Failed to fetch posts");
+                    return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to fetch posts"));
                 }
 
         }
@@ -42,7 +42,7 @@ export const createPost= createAsyncThunk("post/createPost",
             return thunkAPI.rejectWithValue("Post creation failed");
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response?.data?.message || "Failed to create post");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to create post"));
         }
     }
 )
@@ -70,7 +70,7 @@ export const deletePost= createAsyncThunk(
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message || "Failed to delete post");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to delete post"));
         }
 
 
@@ -95,7 +95,7 @@ export const incrementLikes = createAsyncThunk(
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message||"Oops failed to like the post try again!")
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Could not like the post. Please try again."));
         }
     }
 
@@ -124,7 +124,7 @@ export const getCommentsByPost= createAsyncThunk(
             }
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message || "Failed to fetch comments");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to fetch comments"));
         }
     }
 )
@@ -151,7 +151,7 @@ export const postComment = createAsyncThunk(
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message || "Failed to post comment");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to post comment"));
         }
 
 

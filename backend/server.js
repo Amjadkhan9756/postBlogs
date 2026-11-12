@@ -36,10 +36,3 @@ try {
     process.exitCode = 1;
 }
 
-
-
-app.listen(()=>{
-    console.log("server is connect ");
-})
-
-

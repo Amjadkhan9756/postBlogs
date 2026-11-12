@@ -128,11 +128,13 @@ cd frontend
 npm install
 ```
 
-Create a `.env.local` (optional — defaults to `http://localhost:8080`):
+For local development, create a `.env.local` (ignored by Git) to use the local API:
 
 ```env
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/
 ```
+
+Production defaults to the deployed API (`https://postblogs-eyvu.onrender.com/`). If you set `NEXT_PUBLIC_API_BASE_URL` in Vercel, use that public API URL, not `localhost`.
 
 Start the app:
 

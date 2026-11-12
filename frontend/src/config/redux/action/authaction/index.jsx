@@ -1,4 +1,4 @@
-import {clientServer} from "@/config";
+import {clientServer, getApiErrorMessage} from "@/config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
@@ -22,7 +22,7 @@ async(user, thunkAPI)=>{
 
     }
     catch(err){
-        return thunkAPI.rejectWithValue(err.response.data.message || "Login failed");
+        return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Login failed"));
     }
 }
 
@@ -50,10 +50,10 @@ export const registerUser= createAsyncThunk("user/register",
             return thunkAPI.fulfillWithValue(response.data);
         }
         catch (err) {
-            const message = err.response?.data?.message
-                || (err.request
-                    ? "Could not reach the API. Check that the backend is running and the API URL is correct."
-                    : "Registration failed");
+            const message = getApiErrorMessage(
+                err,
+                "Could not reach the API. Check that the backend is running and the API URL is correct."
+            );
             return thunkAPI.rejectWithValue(message);
         }
     }
@@ -73,7 +73,7 @@ export const getAboutUser= createAsyncThunk("user/getAboutUser",
             return thunkAPI.fulfillWithValue(response.data);
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message || "Failed to fetch user data");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to fetch user data"));
         }
     }
 )
@@ -91,7 +91,7 @@ export const getAllUser= createAsyncThunk("user/getAllUser",
         catch(err){
 
 
-            return thunkAPI.rejectWithValue(err.response.data.message || "Failed to fetch all users");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to fetch all users"));
         }
     }
 )
@@ -112,7 +112,7 @@ export const sendConnectionRequest = createAsyncThunk(
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message|| "failed to send the request ")
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Failed to send the request"));
         }
 
     }
@@ -138,7 +138,7 @@ export const getConnectionRequest= createAsyncThunk(
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message|| " We are unable to getconnection request");
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Unable to get connection requests"));
 
             
         }
@@ -166,7 +166,7 @@ export const getMyConnectionsRequest= createAsyncThunk("user/getMyConnections",
         }
 
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message||"Anable to fetch the getMyConnection !")
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Unable to fetch your connections"));
 
         }
 
@@ -195,7 +195,7 @@ export const acceptConnectionRequest= createAsyncThunk("user/accept_connection_r
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(err.response.data.message|| "Did not Accept the request please try again !")
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Could not accept the request. Please try again."));
         }
 
     }
