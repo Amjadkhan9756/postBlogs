@@ -103,7 +103,7 @@ function DashboardLayout({ children }) {
 
             <p>My Connections</p>
           </div>
-          //Profile for responsive degine 
+          {/* Profile for responsive degine  */}
 
           <div
             onClick={() => router.push("/profile")}
