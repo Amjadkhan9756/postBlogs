@@ -66,6 +66,7 @@
 
 .userInfo {
   flex: 1;
+  min-width: 0;
 }
 
 .name {
@@ -168,6 +169,7 @@
 
   .header {
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 0.75rem;
     padding: 0.75rem;
   }
@@ -184,6 +186,15 @@
   .userInfo {
     min-width: 0;
     width: 100%;
+  }
+
+  .userInfoConnect {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .profileDownload {
+    margin-top: 0.5rem;
   }
 
   .name {

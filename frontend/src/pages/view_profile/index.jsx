@@ -114,7 +114,7 @@ export default function ViewProfile({ userProfile }) {
               initialClassName={styles.profilePicInitials}
             />
 
-            <div className="userInfoConnect">
+            <div className={styles.userInfoConnect}>
               <div className={styles.userInfo}>
                 <h2 className={styles.name} style={{ display: "inline-flex", alignItems: "center" }}>
                   {userProfile.userId?.name}

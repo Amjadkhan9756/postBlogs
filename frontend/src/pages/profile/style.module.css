@@ -150,6 +150,12 @@
 .userInfo {
   flex: 1;
   padding-top: 12px;
+  min-width: 0;
+}
+
+.userInfoConnect {
+  flex: 1;
+  min-width: 0;
 }
 
 .name {
@@ -347,7 +353,7 @@
   border-color: var(--accent);
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   .profileContainer {
     border-radius: 12px;
   }
@@ -358,8 +364,13 @@
 
   .header {
     flex-wrap: wrap;
+    align-items: flex-start;
     gap: 0.75rem;
     padding: 0 1rem 1rem;
+  }
+
+  .userInfoConnect {
+    flex: 1 1 100%;
   }
 
   .profilePic,
@@ -451,8 +462,8 @@
 }
 
 .AllCommentsContainer {
-  width: 40vw;
-  min-width: 320px;
+  width: min(40vw, 560px);
+  min-width: min(320px, 92vw);
   height: fit-content;
   background: var(--card);
   position: relative;
@@ -480,7 +491,7 @@
   border-color: var(--accent);
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   .AllCommentsContainer {
     box-sizing: border-box;
     width: 92vw;
