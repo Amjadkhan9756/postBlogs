@@ -501,18 +501,87 @@
     padding: 1rem;
 }
 
-@media only screen and (max-width:600px) {
-  .AllCommentsContainer {
-    width: 80svw;
+@media only screen and (max-width:900px) {
+  .homeContainer {
+    grid-template-columns: 200px minmax(0, 1fr);
   }
 
-  .singleCard {
-    margin-left: -2rem;
+  .homeContainer_extraContainer {
+    display: none;
   }
 }
 
-@media only screen and (max-width:900px) {
+@media only screen and (max-width:700px) {
   .homeContainer {
-    grid-template-columns: 180px minmax(0, 1fr);
+    display: block;
+    min-height: 100dvh;
+    height: auto;
+    overflow: visible;
+  }
+
+  .homeContainer_left {
+    position: fixed;
+    z-index: 10;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    gap: 0.15rem;
+    padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom));
+    overflow: visible;
+    border-top: 1px solid rgba(69, 64, 57, 0.15);
+    border-right: 0;
+    background: #f5f1e7;
+  }
+
+  .sidebarOption {
+    flex: 1;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+    padding: 0.35rem 0.1rem;
+    font-size: 0.62rem;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .sidebarOption > svg {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .sidebarOption > p {
+    white-space: nowrap;
+  }
+
+  .homeContainer_feedContainer {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 100dvh;
+    padding: 0.75rem 0.75rem calc(5.5rem + env(safe-area-inset-bottom));
+    overflow: visible;
+  }
+
+  .homeContainer_extraContainer,
+  .mobileNavBar {
+    display: none;
+  }
+
+}
+
+@media only screen and (max-width:380px) {
+  .sidebarOption {
+    font-size: 0.55rem;
+  }
+
+  .homeContainer_feedContainer {
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
   }
 }

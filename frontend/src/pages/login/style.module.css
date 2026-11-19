@@ -1,24 +1,26 @@
 .container{
     display: flex;
     justify-content: center;
-    height: 90svh;
+    min-height: 90svh;
     align-items: center;
     background:snow ;
+    padding: 1.25rem;
 }
 .cardContainer{
-    height: 80vh;
+    min-height: min(80vh, 720px);
     border-radius: 10px;
     display: flex;
     overflow: hidden;
-    width: 80vw;
+    width: min(920px, 100%);
     background: white;
     box-shadow: 10px 10px 15px rgba(173,173,173);
 }
 
 .cardContainer_left{
 text-align: center;
-padding: 2rem;
+padding: clamp(1.25rem, 4vw, 2.5rem);
 flex: 0.6;
+min-width: 0;
 
 }
 .cardContainer_right{
@@ -29,7 +31,8 @@ flex: 0.6;
     align-items: center;
     flex-direction: column;
     gap:1.2rem;
-    padding-inline: 1.2rem;
+    padding: 1.5rem;
+    min-width: 0;
 }
 
 .cardleft_heading{
@@ -65,11 +68,9 @@ flex: 0.6;
     gap:1.2rem;
 }
 .inputRow{
-    width: fit-content;
     display:flex;
     gap:1.2rem;
     width: 100%;
-    width: 100%; /* 🔵 Added: Ensures row aligns with other inputs */
 
 }
 .buttonWithOutline{
@@ -93,9 +94,31 @@ flex: 0.6;
 
 
 @media only  screen and (max-width:600px) {
+    .container {
+        min-height: calc(100dvh - 4.5rem);
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
     .cardContainer{
         flex-direction: column;
-      
+        min-height: 0;
+        height: auto;
+        width: 100%;
     }
-    
+
+    .cardContainer_left {
+        flex: auto;
+        padding: 1.5rem 1rem;
+    }
+
+    .cardContainer_right {
+        flex: auto;
+        padding: 1.25rem;
+    }
+
+    .inputRow {
+        flex-direction: column;
+        gap: 1rem;
+    }
 }

@@ -9,7 +9,6 @@
 /* @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap'); */
 
 .profileContainer {
-  background-color: red;
   --ink: #16181d;
   --slate: #5b6470;
   --slate-light: #8b93a0;
@@ -52,8 +51,10 @@
    ========================================================================== */
 
 .profileContainer {
+  box-sizing: border-box;
+  width: 100%;
   max-width: 680px;
-  margin: 2rem auto;
+  margin: 0 auto;
   background: var(--card);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -347,6 +348,51 @@
 }
 
 @media only screen and (max-width: 600px) {
+  .profileContainer {
+    border-radius: 12px;
+  }
+
+  .banner {
+    height: 120px;
+  }
+
+  .header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0 1rem 1rem;
+  }
+
+  .profilePic,
+  .profilePicInitials,
+  .profile_overlay {
+    width: 88px;
+    height: 88px;
+    min-width: 88px;
+    min-height: 88px;
+    margin-top: -44px;
+  }
+
+  .userInfo {
+    min-width: 0;
+    width: 100%;
+    padding-top: 0;
+  }
+
+  .name {
+    font-size: clamp(1.35rem, 7vw, 1.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .editname {
+    min-width: 0;
+    width: 100%;
+    font-size: 1.15rem;
+  }
+
+  .section {
+    padding: 1rem;
+  }
+
   .textarea_container textarea {
     width: 100%;
     max-width: 100%;
@@ -436,7 +482,10 @@
 
 @media only screen and (max-width: 600px) {
   .AllCommentsContainer {
-    width: 90vw;
+    box-sizing: border-box;
+    width: 92vw;
+    max-height: 85dvh;
+    overflow-y: auto;
   }
 
   .AllCommentsContainer > .addExpreinceInput {

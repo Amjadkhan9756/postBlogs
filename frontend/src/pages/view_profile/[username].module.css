@@ -160,12 +160,49 @@
 
 }
 
+@media only screen and (max-width: 700px) {
+  .profileContainer {
+    width: 100%;
+    border-radius: 14px;
+  }
 
+  .header {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
 
+  .profilePic,
+  .profilePicInitials {
+    width: 88px;
+    height: 88px;
+    min-width: 88px;
+    min-height: 88px;
+    margin-top: -52px;
+  }
 
+  .userInfo {
+    min-width: 0;
+    width: 100%;
+  }
 
+  .name {
+    font-size: clamp(1.25rem, 6vw, 1.6rem);
+    overflow-wrap: anywhere;
+  }
 
+  .bio {
+    overflow-wrap: anywhere;
+  }
 
+  .sendConnectionContainer {
+    position: static;
+    width: min(100%, 220px);
+    margin: 0.75rem 0 0;
+    padding: 0;
+  }
 
-
-
+  .section {
+    padding: 1rem;
+  }
+}
