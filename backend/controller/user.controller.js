@@ -8,12 +8,11 @@ import { getVerifiedUserIds } from "../utils/verified.js";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import PDFDocument from "pdfkit";
-
-
 const hasValidPassword = (password) =>
-    typeof password === "string" && password.length >= 6 && /[A-Za-z]/.test(password);
-
-
+    typeof password === "string" &&
+    password.length > 6 &&
+    /[A-Za-z]/.test(password);
+    
 const cunvertUserDataTOPDF= async (userData)=>{
     const doc = new PDFDocument;
     const outputPath=crypto.randomBytes(32).toString("hex")+".pdf";

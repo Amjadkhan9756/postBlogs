@@ -6,7 +6,7 @@ import {
   allPosts,
   createPost,
   deletePost,
-  incrementLikes,
+  toggleLike,
   getCommentsByPost,
   postComment
 } from "@/config/redux/action/postaction";
@@ -28,6 +28,24 @@ function getInitials(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
+function getPostShareUrl(post) {
+  const url = new URL(window.location.href);
+  url.hash = `post-${post._id}`;
+  return url.toString();
+}
+
+function getPostShareOptions(post) {
+  const url = getPostShareUrl(post);
+  const encodedUrl = encodeURIComponent(url);
+  const encodedText = encodeURIComponent(`Check out this post: ${post.body}`);
+  return [
+    { label: "X", href: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}` },
+    { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
+    { label: "LinkedIn", href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}` },
+    { label: "WhatsApp", href: `https://wa.me/?text=${encodeURIComponent(`Check out this post: ${post.body} ${url}`)}` },
+  ];
+}
+
 function dashboard() {
   const dispatch = useDispatch();
   const postState = useSelector((state) => state.postsreducer);
@@ -37,6 +55,34 @@ function dashboard() {
   const [postContent, setPostContent] = useState("");
   const [fileContent, setFileContent] = useState("");
   const [commnetText, setCommnetText] = useState("");
+  const [likingPostIds, setLikingPostIds] = useState([]);
+  const [likeError, setLikeError] = useState("");
+  const [sharingPost, setSharingPost] = useState(null);
+  const [shareMessage, setShareMessage] = useState("");
+
+  const handleLike = async (postId) => {
+    if (likingPostIds.includes(postId)) return;
+
+    setLikeError("");
+    setLikingPostIds((ids) => [...ids, postId]);
+    try {
+      await dispatch(toggleLike({ post_id: postId })).unwrap();
+      await dispatch(allPosts()).unwrap();
+    } catch (error) {
+      setLikeError(typeof error === "string" ? error : error?.message || "Could not update the like. Please try again.");
+    } finally {
+      setLikingPostIds((ids) => ids.filter((id) => id !== postId));
+    }
+  };
+
+  const handleCopyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText(getPostShareUrl(sharingPost));
+      setShareMessage("Post link copied.");
+    } catch {
+      setShareMessage("Could not copy the post link. Check your browser's clipboard permissions.");
+    }
+  };
 
   useEffect(() => {
     if (authState.isTokenThere) {
@@ -129,7 +175,7 @@ function dashboard() {
                     const profilePicture = hasUser?.profilePicture;
 
                     return (
-                      <div key={post._id} className={styles.singleCard}>
+                      <div id={`post-${post._id}`} key={post._id} className={styles.singleCard}>
                         <div className={styles.singleCard_profileContainer}>
                           {hasUser && (
                             <Avatar
@@ -203,24 +249,21 @@ function dashboard() {
                             </div>
 
                             <div className={styles.optionContainer}>
-                              <div
-
-                                onClick={async () => {
-                                  //dispatch inctrement likes button here 
-
-                                  await dispatch(incrementLikes({ post_id: post._id, }));
-                                  await dispatch(allPosts());
-                                }}
-
+                              <button
+                                type="button"
+                                onClick={() => handleLike(post._id)}
+                                disabled={likingPostIds.includes(post._id)}
+                                aria-pressed={Boolean(post.liked)}
+                                aria-label={post.liked ? "Unlike post" : "Like post"}
                                 className={styles.single_optionContainer}>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6" style={{ color: post.liked ? "#b42318" : undefined }}>
                                   <path d="M7.493 18.5c-.425 0-.82-.236-.975-.632A7.48 7.48 0 0 1 6 15.125c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V2.75A.75.75 0 0 1 15 2a2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23h-.777ZM2.331 10.727a11.969 11.969 0 0 0-.831 4.398 12 12 0 0 0 .52 3.507C2.28 19.482 3.105 20 3.994 20H4.9c.445 0 .72-.498.523-.898a8.963 8.963 0 0 1-.924-3.977c0-1.708.476-3.305 1.302-4.666.245-.403-.028-.959-.5-.959H4.25c-.832 0-1.612.453-1.918 1.227Z" />
                                 </svg>
 
 
                                 <span style={{ fontWeight: "600" }}>{post.likes}</span>
 
-                              </div>
+                              </button>
 
                               <div
 
@@ -239,11 +282,7 @@ function dashboard() {
 
                               <div
 
-                                onClick={() => {
-                                  const text = encodeURIComponent(`Check out this post: ${post.body}`);
-                                  const url = `https://twitter.com/intent/tweet?text=${text}`;
-                                  window.open(url, "_blank");
-                                }}
+                                onClick={() => { setShareMessage(""); setSharingPost(post); }}
 
 
                                 className={styles.single_optionContainer}>
@@ -252,7 +291,7 @@ function dashboard() {
                                 </svg>
 
 
-                                <span style={{ fontWeight: "600" }}>Send</span>
+                                <span style={{ fontWeight: "600" }}>Share</span>
                               </div>
 
                             </div>
@@ -266,6 +305,7 @@ function dashboard() {
               </div>
             </div>
           </div>
+          {likeError && <p className={styles.actionError} role="alert">{likeError}</p>}
           {postState.postId != "" &&
 
             <div
@@ -358,6 +398,31 @@ function dashboard() {
             </div>
 
           }
+          {sharingPost && (
+            <div className={styles.commentsContainer} onClick={() => setSharingPost(null)}>
+              <section
+                className={styles.shareDialog}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="share-dialog-title"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <div className={styles.shareDialogHeader}>
+                  <h2 id="share-dialog-title">Share this post</h2>
+                  <button type="button" onClick={() => setSharingPost(null)} aria-label="Close share options">×</button>
+                </div>
+                <div className={styles.shareOptions}>
+                  {getPostShareOptions(sharingPost).map((option) => (
+                    <a key={option.label} href={option.href} target="_blank" rel="noopener noreferrer">
+                      {option.label}
+                    </a>
+                  ))}
+                  <button type="button" onClick={handleCopyShareLink}>Copy link</button>
+                </div>
+                {shareMessage && <p role="status">{shareMessage}</p>}
+              </section>
+            </div>
+          )}
         </DashboardLayout>
       </UserLayout>
     );

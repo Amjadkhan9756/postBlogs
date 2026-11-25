@@ -402,7 +402,8 @@
     background: rgba(255, 255, 255, 0.08);
 }
 
-.optionContainer > div {
+.optionContainer > div,
+.optionContainer > button {
     display: flex;
     align-items: center;
     gap: 0.55rem;
@@ -412,10 +413,27 @@
     min-width: 0;
 }
 
-.optionContainer > div > svg {
+.optionContainer > button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font: inherit;
+}
+
+.optionContainer > button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+.optionContainer > div > svg,
+.optionContainer > button > svg {
     width: 20px;
     height: 20px;
     color: #2e2e2e;
+}
+
+.actionError {
+    color: #b42318;
 }
 
 .commentsContainer {
@@ -430,6 +448,63 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.shareDialog {
+    box-sizing: border-box;
+    width: min(92vw, 440px);
+    padding: 1.4rem;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.shareDialogHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.shareDialogHeader h2 {
+    margin: 0;
+}
+
+.shareDialogHeader button {
+    border: 0;
+    background: transparent;
+    font-size: 1.7rem;
+    cursor: pointer;
+}
+
+.shareOptions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.shareOptions a,
+.shareOptions button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 9px;
+    background: #f8f8f8;
+    color: #222;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.shareOptions a:hover,
+.shareOptions button:hover {
+    background: #eee;
 }
 
 .AllCommentsContainer {
@@ -550,12 +625,14 @@
     padding: 0.75rem;
   }
 
-  .optionContainer > div {
+  .optionContainer > div,
+  .optionContainer > button {
     gap: 0.3rem;
     font-size: 0.8rem;
   }
 
-  .optionContainer > div > svg {
+  .optionContainer > div > svg,
+  .optionContainer > button > svg {
     width: 18px;
     height: 18px;
   }
@@ -605,7 +682,8 @@
     min-height: 36px;
   }
 
-  .optionContainer > div {
+  .optionContainer > div,
+  .optionContainer > button {
     font-size: 0.7rem;
   }
 }

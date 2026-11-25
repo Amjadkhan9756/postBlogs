@@ -39,11 +39,19 @@ export const createPost = async (req, res) => {
 // get all posts (attach verified badge for users with 600k+ total post likes)
 export const getAllPost = async (req, res) => {
     try {
+        const currentUser = req.query.token
+            ? await User.findOne({ token: req.query.token }).select("_id")
+            : null;
         const posts = await Post.find().populate('userId', 'name username email profilePicture');
         const verifiedIds = await getVerifiedUserIds();
         const postsWithVerified = posts.map((p) => {
             const po = p.toObject();
             if (po.userId) po.userId.verified = verifiedIds.has(po.userId._id.toString());
+            po.liked = Boolean(
+                currentUser &&
+                (po.likedBy || []).some((userId) => userId.toString() === currentUser._id.toString())
+            );
+            delete po.likedBy;
             return po;
         });
         return res.status(200).json({ posts: postsWithVerified });
@@ -165,17 +173,42 @@ export const destroyCommnet= async(req, res)=>{
 
 
 
-///increment likes 
-export const incrementLikes= async(req, res)=>{
-    const {post_id}= req.body;
+// Toggle the current user's like without allowing duplicate requests to inflate the count.
+export const toggleLike = async (req, res) => {
+    const { post_id, token } = req.body;
     try{
-        const post = await Post.findOne({_id:post_id});
-        if(!post){
-            return res.status(404).json({message:"psot not found"});
+        if (!token || !post_id) {
+            return res.status(400).json({ message: "Token and post ID are required" });
         }
-        post.likes= post.likes+1;
-        await post.save();
-        return res.status(200).json({message:"likes incremented"});
+
+        const user = await User.findOne({ token }).select("_id");
+        if (!user) {
+            return res.status(401).json({ message: "Please log in to like posts" });
+        }
+
+        const post = await Post.findById(post_id).select("likes likedBy");
+        if(!post){
+            return res.status(404).json({message:"post not found"});
+        }
+
+        const userId = user._id.toString();
+        const isLiked = (post.likedBy || []).some((likedUserId) => likedUserId.toString() === userId);
+        const filter = { _id: post._id };
+        const update = isLiked
+            ? { $pull: { likedBy: user._id }, $inc: { likes: -1 } }
+            : { $addToSet: { likedBy: user._id }, $inc: { likes: 1 } };
+        filter.likedBy = isLiked ? user._id : { $ne: user._id };
+
+        let updatedPost = await Post.findOneAndUpdate(filter, update, { new: true }).select("likes likedBy");
+        if (!updatedPost) {
+            updatedPost = await Post.findById(post_id).select("likes likedBy");
+            if (!updatedPost) {
+                return res.status(404).json({ message: "post not found" });
+            }
+        }
+
+        const liked = (updatedPost.likedBy || []).some((likedUserId) => likedUserId.toString() === userId);
+        return res.status(200).json({ likes: updatedPost.likes, liked });
 
     } catch(err){
         return res.status(500).json({message:err.message});

@@ -2,7 +2,7 @@ import { Router } from "express";
 import path from "path";
 import { activeCheck } from  "../controller/posts.controller.js";
 import multer from "multer";
-import { commentPost,get_comment_bypost, createPost, destroyCommnet, destroyPost, getAllPost, incrementLikes } from "../controller/posts.controller.js";
+import { commentPost,get_comment_bypost, createPost, destroyCommnet, destroyPost, getAllPost, toggleLike } from "../controller/posts.controller.js";
 
 const router=Router();
 
@@ -35,7 +35,7 @@ router.route("/destroy_post").delete(destroyPost);
 router.route("/comment_post").post(commentPost);
 router.route("/get_comments").get(get_comment_bypost);
 router.route("/destroy_comment").post(destroyCommnet);
-router.route("/increment_likes").post(incrementLikes);
+router.route("/toggle_like").post(toggleLike);
 
 
 

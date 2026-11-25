@@ -6,7 +6,8 @@ export const allPosts= createAsyncThunk("post/posts",
         async(_,thunkAPI)=>{
 
         try{
-            const response= await clientServer.get("/posts");
+            const token = localStorage.getItem("token");
+            const response= await clientServer.get("/posts", { params: token ? { token } : {} });
             console.log("response bala action se "+response);
             console.log("action bala posts all hai ",response.data);
            if(response.status==200){
@@ -78,24 +79,23 @@ export const deletePost= createAsyncThunk(
 )
 
 
-// inctrement like code
-export const incrementLikes = createAsyncThunk(
-    "post/likesincrement",
+export const toggleLike = createAsyncThunk(
+    "post/toggleLike",
     async({post_id}, thunkAPI)=>{
         try{
-            const response = await clientServer.post("/increment_likes",{
+            const response = await clientServer.post("/toggle_like",{
                 post_id:post_id,
-               
+                token: localStorage.getItem("token"),
 
             });
-            if(response.status==200){
+            if(response.status === 200){
                 return thunkAPI.fulfillWithValue(response.data);
             }
 
 
         }
         catch(err){
-            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Could not like the post. Please try again."));
+            return thunkAPI.rejectWithValue(getApiErrorMessage(err, "Could not update the like. Please try again."));
         }
     }
 
