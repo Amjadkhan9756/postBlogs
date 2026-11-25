@@ -10,7 +10,8 @@ import crypto from "crypto";
 import PDFDocument from "pdfkit";
 
 
-
+const hasValidPassword = (password) =>
+    typeof password === "string" && password.length >= 6 && /[A-Za-z]/.test(password);
 
 
 const cunvertUserDataTOPDF= async (userData)=>{
@@ -43,21 +44,27 @@ const cunvertUserDataTOPDF= async (userData)=>{
 export const register = async (req, res) => {
     try {
         const { name, email, password, username } = req.body;
-        if (!name || !email || !password || !username) {
+        const normalizedName = typeof name === "string" ? name.trim() : "";
+        const normalizedUsername = typeof username === "string" ? username.trim() : "";
+        const normalizedEmail = typeof email === "string" ? email.trim() : "";
+        if (!normalizedName || !normalizedEmail || !normalizedUsername || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
+        if (!hasValidPassword(password)) {
+            return res.status(400).json({ message: "Password must be at least 6 characters and include at least one letter." });
+        }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: normalizedEmail });
         console.log(user);
         if (user) {
             return res.status(409).json({ message: "user already exist in DB" });
         }
         const hashedpassword = await bcrypt.hash(password, 12);
         const newuser = new User({
-            name,
-            email,
+            name: normalizedName,
+            email: normalizedEmail,
             password: hashedpassword,
-            username,
+            username: normalizedUsername,
         });
         await newuser.save();
         console.log(newuser);
@@ -84,11 +91,15 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        if (!email || !password) {
+        const normalizedEmail = typeof email === "string" ? email.trim() : "";
+        if (!normalizedEmail || !password) {
             return res.status(400).json({ message: "All fields are required here!" });
         }
+        if (!hasValidPassword(password)) {
+            return res.status(400).json({ message: "Password must be at least 6 characters and include at least one letter." });
+        }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: normalizedEmail });
         if (!user) {
             return res.status(404).json({ message: "user does not exist in DB" });
         }

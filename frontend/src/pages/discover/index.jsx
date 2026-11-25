@@ -3,7 +3,7 @@ import UserLayout from "@/layout/userlayout";
 import DashboardLayout from "@/layout/dasboardLayout";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getAllUser } from "@/config/redux/action/authaction";
 import { getImageUrl } from "@/config/index";
 import Avatar from "@/Component/Avatar";
@@ -16,10 +16,20 @@ function Discover() {
     const dispatch = useDispatch();
     const authState= useSelector((state) => state.auth);
     const router= useRouter();
+    const [searchTerm, setSearchTerm] = useState("");
     useEffect(() => {
          if(!authState.all_profiles_fetched){
             dispatch(getAllUser());    
         }},[]);
+
+    const normalizedSearch = searchTerm.trim().toLowerCase();
+    const matchingUsers = normalizedSearch
+        ? authState.all_profiles.filter(({ userId }) => {
+            if (!userId) return false;
+            return [userId.name, userId.username]
+                .some((value) => value?.toLowerCase().includes(normalizedSearch));
+        })
+        : [];
 
         
     return ( 
@@ -29,9 +39,20 @@ function Discover() {
         <div className={styles.alluserProfile}>
 
             <h1>Discover</h1>
-            {authState.all_profiles_fetched && authState.all_profiles.map((users)=>{
+            <input
+              className={styles.searchInput}
+              type="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder="Search by name or username"
+              aria-label="Search users by name or username"
+            />
+            {!normalizedSearch ? (
+              <p className={styles.searchHint}>Type a name or username to find people.</p>
+            ) : authState.all_profiles_fetched && matchingUsers.length === 0 ? (
+              <p className={styles.searchHint}>No users found.</p>
+            ) : matchingUsers.map((users)=>{
                 const profileUser = users.userId;
-                if (!profileUser) return null;
 
                 return(
                 

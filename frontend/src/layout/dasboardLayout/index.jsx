@@ -17,6 +17,10 @@ function DashboardLayout({ children }) {
   }, []);
 
   const handleLogout = () => {
+    if (!window.confirm("Are you sure you want to log out?")) {
+      return;
+    }
+
     dispatch(logoutUser());
     localStorage.removeItem("token");
     router.push("/login");
