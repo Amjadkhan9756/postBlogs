@@ -28,6 +28,11 @@ const PORT = process.env.PORT || 8080;
 try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("Connected to MongoDB");
+    const userIndexes = await mongoose.connection.collection("users").indexes();
+    if (userIndexes.some((index) => index.name === "username_1")) {
+        await mongoose.connection.collection("users").dropIndex("username_1");
+        console.log("Removed username uniqueness index");
+    }
     app.listen(PORT, () => {
         console.log(`🚀 Server is running on port ${PORT}`);
     });

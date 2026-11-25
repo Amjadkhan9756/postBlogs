@@ -29,8 +29,8 @@ function LoginComponent() {
               return;
           }
 
-          if (!isloggedMethod && (!name.trim() || !username.trim())) {
-              setFormError("First name and username are required.");
+          if (!isloggedMethod && !name.trim()) {
+              setFormError("First name is required.");
               return;
           }
 
@@ -73,7 +73,7 @@ function LoginComponent() {
           {formError && <p role="alert" style={{ color: "red" }}>{formError}</p>}
                 <form className={styles.inputcontainers} onSubmit={handleSubmit}>
                     {!isloggedMethod && <div className={styles.inputRow}>
-                        <input onChange={(e)=>setusername(e.target.value)} className={styles.inputField} type="text" placeholder="Username" aria-label="Username" required/>
+                        <input onChange={(e)=>setusername(e.target.value)} className={styles.inputField} type="text" placeholder="Username" aria-label="Username"/>
                      <input onChange={(e)=>setname(e.target.value)} className={styles.inputField} type="text" placeholder="First name" aria-label="First name" required/>
                     </div>}
                    

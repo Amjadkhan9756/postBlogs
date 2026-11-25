@@ -46,7 +46,7 @@ export const register = async (req, res) => {
         const normalizedName = typeof name === "string" ? name.trim() : "";
         const normalizedUsername = typeof username === "string" ? username.trim() : "";
         const normalizedEmail = typeof email === "string" ? email.trim() : "";
-        if (!normalizedName || !normalizedEmail || !normalizedUsername || !password) {
+        if (!normalizedName || !normalizedEmail || !password) {
             return res.status(400).json({ message: "All fields are required" });
         }
         if (!hasValidPassword(password)) {
@@ -54,11 +54,10 @@ export const register = async (req, res) => {
         }
 
         const existingUser = await User.findOne({
-            $or: [{ email: normalizedEmail }, { username: normalizedUsername }],
-        }).select("email username");
+            email: normalizedEmail,
+        }).select("email");
         if (existingUser) {
-            const duplicateField = existingUser.email === normalizedEmail ? "Email" : "Username";
-            return res.status(409).json({ message: `${duplicateField} is already in use` });
+            return res.status(409).json({ message: "Email is already in use" });
         }
 
         const hashedpassword = await bcrypt.hash(password, 12);
@@ -78,8 +77,7 @@ export const register = async (req, res) => {
     }
     catch (err) {
         if (err?.code === 11000) {
-            const duplicateField = err.keyPattern?.username ? "Username" : "Email";
-            return res.status(409).json({ message: `${duplicateField} is already in use` });
+            return res.status(409).json({ message: "Email is already in use" });
         }
         console.error("register error:", err);
         return res.status(500).json({ message: "something went wrong !" });
