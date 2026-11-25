@@ -42,7 +42,7 @@ const cunvertUserDataTOPDF= async (userData)=>{
 
 export const register = async (req, res) => {
     try {
-        const { name, email, password, username } = req.body;
+        const { name, email, password, username } = req.body || {};
         const normalizedName = typeof name === "string" ? name.trim() : "";
         const normalizedUsername = typeof username === "string" ? username.trim() : "";
         const normalizedEmail = typeof email === "string" ? email.trim() : "";
@@ -53,11 +53,14 @@ export const register = async (req, res) => {
             return res.status(400).json({ message: "Password must be at least 6 characters and include at least one letter." });
         }
 
-        const user = await User.findOne({ email: normalizedEmail });
-        console.log(user);
-        if (user) {
-            return res.status(409).json({ message: "user already exist in DB" });
+        const existingUser = await User.findOne({
+            $or: [{ email: normalizedEmail }, { username: normalizedUsername }],
+        }).select("email username");
+        if (existingUser) {
+            const duplicateField = existingUser.email === normalizedEmail ? "Email" : "Username";
+            return res.status(409).json({ message: `${duplicateField} is already in use` });
         }
+
         const hashedpassword = await bcrypt.hash(password, 12);
         const newuser = new User({
             name: normalizedName,
@@ -72,12 +75,13 @@ export const register = async (req, res) => {
         });
         await newProfile.save();
         return res.status(201).json({ message: "User Signup successfully !" });
-
-
-
     }
     catch (err) {
-        console.log(err);
+        if (err?.code === 11000) {
+            const duplicateField = err.keyPattern?.username ? "Username" : "Email";
+            return res.status(409).json({ message: `${duplicateField} is already in use` });
+        }
+        console.error("register error:", err);
         return res.status(500).json({ message: "something went wrong !" });
     }
 
